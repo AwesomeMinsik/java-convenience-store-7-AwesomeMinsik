@@ -1,11 +1,10 @@
 package store.policy;
 
 public enum PromotionPolicy {
-    NONE("일반 상품"),
-    MD_RECOMMENDED("추천 상품"),
-    BUY2GET1("2+1 프로모션"),
+    NONE(""),
+    MD_RECOMMENDED("MD추천상품"),
+    BUY2GET1("탄산2+1"),
     LIMITED_DISCOUNT("반짝 할인");
-
     private final String description;
 
     // 생성자
