@@ -9,7 +9,7 @@ import java.util.List;
 
 import static store.policy.PromotionPolicy.*;
 
-public class ProductParser {
+public abstract class ProductParser {
     public static List<Product> getProductList(List<String> parts) {
         List<Product> products = new ArrayList<>();
         for (String line : parts) {
@@ -23,29 +23,12 @@ public class ProductParser {
                 .map(String::trim)
                 .toList();
 
-        String name = parts.get(0);
-        int price = Integer.parseInt(parts.get(1));
-        int quantity = Integer.parseInt(parts.get(2));
-        String promotionStr = parts.get(3);
-
-        PromotionPolicy promotion = fromString(promotionStr);
-
-        products.add(new Product(name, price, quantity, promotion));
+        products.add(new Product(parts.get(0),
+                Integer.parseInt(parts.get(1)),
+                Integer.parseInt(parts.get(2)),
+                fromString(parts.get(3))));
     }
-
-    public static List<String> convertProductToString(List<Product> products) {
-        List<String> productStrings = new ArrayList<>();
-        for (Product product : products) {
-            String name = product.getName();
-            int price = product.getPrice();
-            int quantity = product.getQuantity();
-            String promotion = toString(product.getPromotion());
-            productStrings.add(String.join(",", name, String.valueOf(price), String.valueOf(quantity), promotion));
-        }
-        return productStrings;
-    }
-
-    public static PromotionPolicy fromString(String promotion) {
+    private static PromotionPolicy fromString(String promotion) {
         if (promotion.equalsIgnoreCase("null")) {
             return NONE;
         }
@@ -57,11 +40,22 @@ public class ProductParser {
         };
     }
 
+    public static List<String> parseProductToString(List<Product> products) {
+        List<String> productStrings = new ArrayList<>();
+        for (Product product : products) {
+            productStrings.add(String.join(",",
+                            product.getName(),
+                            String.valueOf(product.getPrice()),
+                            String.valueOf(product.getQuantity()),
+                            toString(product.getPromotion())));
+        }
+        return productStrings;
+    }
+
     public static String toString(PromotionPolicy promotionPolicy) {
         if (promotionPolicy == NONE) {
             return "null";
         }
-
         return switch (promotionPolicy) {
             case MD_RECOMMENDED -> "MD추천상품";
             case BUY2GET1 -> "탄산2+1";
