@@ -1,5 +1,6 @@
 package store.parser;
 
+import store.factory.ProductFactory;
 import store.model.Product;
 import store.policy.PromotionPolicy;
 
@@ -22,13 +23,9 @@ public abstract class ProductParser {
         List<String> parts = Arrays.stream(line.split(","))
                 .map(String::trim)
                 .toList();
-
-        products.add(new Product(parts.get(0),
-                Integer.parseInt(parts.get(1)),
-                Integer.parseInt(parts.get(2)),
-                fromString(parts.get(3))));
+        products.add(ProductFactory.createProductObject(parts));
     }
-    private static PromotionPolicy fromString(String promotion) {
+    public static PromotionPolicy fromString(String promotion) {
         if (promotion.equalsIgnoreCase("null")) {
             return NONE;
         }
