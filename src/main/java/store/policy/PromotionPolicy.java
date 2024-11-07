@@ -21,28 +21,4 @@ public enum PromotionPolicy {
     public String toString() {
         return description;
     }
-
-    public static PromotionPolicy fromString(String promotion) {
-        if (promotion == null || promotion.equalsIgnoreCase("null")) {
-            return NONE;
-        }
-        return switch (promotion) {
-            case "MD추천상품" -> MD_RECOMMENDED;
-            case "탄산2+1" -> BUY2GET1;
-            case "반짝할인" -> LIMITED_DISCOUNT;
-            default -> NONE;
-        };
-    }
-    public static String toString(PromotionPolicy promotionPolicy) {
-        if (promotionPolicy == null || promotionPolicy == NONE) {
-            return "null";
-        }
-
-        return switch (promotionPolicy) {
-            case MD_RECOMMENDED -> "MD추천상품";
-            case BUY2GET1 -> "탄산2+1";
-            case LIMITED_DISCOUNT -> "반짝할인";
-            default -> "null";
-        };
-    }
 }
