@@ -1,6 +1,6 @@
 package store.model;
 
-import store.policy.PromotionType;
+import store.policy.PromotionPolicy;
 
 import java.text.NumberFormat;
 
@@ -8,9 +8,9 @@ public class Product {
     private String name;
     private int price;
     private int quantity;
-    private PromotionType promotion;
+    private PromotionPolicy promotion;
 
-    public Product(String name, int price, int quantity, PromotionType promotion) {
+    public Product(String name, int price, int quantity, PromotionPolicy promotion) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -41,12 +41,8 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public PromotionType getPromotion() {
+    public PromotionPolicy getPromotion() {
         return promotion;
-    }
-
-    public void setPromotion(PromotionType promotion) {
-        this.promotion = promotion;
     }
 
     @Override
