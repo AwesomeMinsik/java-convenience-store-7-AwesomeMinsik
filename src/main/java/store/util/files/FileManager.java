@@ -9,11 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileManager {
+public abstract class FileManager {
 
-    public static final String PATH = "src/main/resources/products.md";
-    public FileManager() {
-    }
+    private static final String PATH = "src/main/resources/products.md";
 
     public static List<Product> getProductList() {
         List<String> products = new ArrayList<>();
@@ -27,7 +25,7 @@ public class FileManager {
         return productList;
     }
 
-    private static List<String> getTextList(BufferedReader reader, List<String> products) throws IOException {
+    public static List<String> getTextList(BufferedReader reader, List<String> products) throws IOException {
         String line;
         reader.readLine();
         while ((line = reader.readLine()) != null)
