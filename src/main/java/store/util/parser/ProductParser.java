@@ -1,4 +1,4 @@
-package store.parser;
+package store.util.parser;
 
 import store.factory.ProductFactory;
 import store.model.Product;

@@ -1,8 +1,8 @@
-package store.files;
+package store.util.files;
 
 
 import store.model.Product;
-import store.parser.ProductParser;
+import store.util.parser.ProductParser;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +12,6 @@ import java.util.List;
 public class FileManager {
 
     public static final String PATH = "src/main/resources/products.md";
-
     public FileManager() {
     }
 
