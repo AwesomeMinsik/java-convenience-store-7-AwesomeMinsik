@@ -25,14 +25,35 @@ public abstract class ProductManager {
         }
     }
 
-    private static void setProductPriceByQuantity(Map<String, Integer> orderedProduct, Product product) {
-        int totalValue = product.getPrice() * orderedProduct.get(product.getName());
-        product.setTotalPrice(totalValue);
+    public static void deductStockProduct(Product product, OrderedProduct orderedProduct) {
+
+            if (product.getPromotion().getBuy() == orderedProduct.getQuantity())
+                isEqualQuantityPromotionBuy(product, orderedProduct);
     }
 
-    private static void createOrderProduct(List<OrderedProduct> orderedProducts, Product product, Integer quantity) {
-        orderedProducts.add(OrderItemFactory.createProductObject(product, quantity));
+    private static void isEqualQuantityPromotionBuy(Product product, OrderedProduct orderedProduct) {
+        int freeItem;
+        boolean isYes=false;
+        freeItem = orderedProduct.getQuantity() / product.getPromotion().getBuy();
+        if (freeItem > 0) {
+            System.out.println("현재 " + product.getName() + "은(는) " + freeItem + "개를 무료로 더 받을 수 있습니다. 추가하시겠습니까? (Y/N)");
+            isYes = inputIsYes(product, orderedProduct);
+
+        }
+        if (isYes) {
+            System.out.println(product);
+            System.out.println("orderedProduct = " + orderedProduct);
+            System.out.println("freeItem = " + freeItem);
+            product.deductStockByQuantity(orderedProduct.getQuantity() + freeItem);
+            System.out.println(product);
+        } else product.deductStockByQuantity(orderedProduct.getQuantity());
     }
 
-
+    public static boolean inputIsYes(Product product, OrderedProduct orderedProduct) {
+        if (product.getPromotion().getBuy() == orderedProduct.getQuantity()) {
+            String input = InputView.applyMembershipDiscount();
+            return input.equalsIgnoreCase("y");
+        }
+        return false;
+    }
 }
