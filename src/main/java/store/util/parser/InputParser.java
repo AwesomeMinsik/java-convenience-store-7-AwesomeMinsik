@@ -9,7 +9,18 @@ import java.util.*;
 
 public class InputParser {
     public static Map<String, Integer> parseOrder(String order) {
-        return parseProduct(order);
+        Map<String, Integer> productMap = new LinkedHashMap<>();
+        String[] split = order.split(",");
+        for (String string : split) {
+            String cleaned = string.replace("[", "").replace("]", "");
+            String[] parts = cleaned.split("-");
+            if (parts.length == 2) {
+                String productName = parts[0].trim();
+                int quantity = StringValidator.validateNumber(parts[1].trim());
+                productMap.put(productName, quantity);
+            }
+        }
+        return productMap;
     }
     public static List<OrderedProduct> getRequestProduct(Map<String, Integer> orderList, Map<Integer, Product> productByOrder) {
         List<OrderedProduct> orderedProducts = new ArrayList<>();
@@ -31,18 +42,5 @@ public class InputParser {
 
         return orderedProducts;
     }
-    private static Map<String, Integer> parseProduct(String productStr) {
-        Map<String, Integer> productMap = new LinkedHashMap<>();
-        String[] split = productStr.split(",");
-        for (String string : split) {
-            String cleaned = string.replace("[", "").replace("]", "");
-            String[] parts = cleaned.split("-");
-            if (parts.length == 2) {
-                String productName = parts[0].trim();
-                int quantity = StringValidator.validateNumber(parts[1].trim());
-                productMap.put(productName, quantity);
-            }
-        }
-        return productMap;
-    }
+
 }
