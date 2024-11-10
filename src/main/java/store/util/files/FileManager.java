@@ -6,10 +6,7 @@ import store.util.parser.ProductParser;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class FileManager {
 
@@ -17,7 +14,7 @@ public abstract class FileManager {
 
     public static Map<Integer, Product> getProductList() {
         List<String> products = new ArrayList<>();
-        Map<Integer, Product> productList= new HashMap<>();
+        Map<Integer, Product> productList= new LinkedHashMap<>();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(new FileInputStream(PATH), StandardCharsets.UTF_8))) {
             productList = ProductParser.getProductList(getTextList(reader, products));
