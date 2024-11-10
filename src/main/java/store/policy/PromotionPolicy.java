@@ -1,24 +1,51 @@
 package store.policy;
 
-public enum PromotionPolicy {
-    NONE(""),
-    MD_RECOMMENDED("MD추천상품"),
-    BUY2GET1("탄산2+1"),
-    LIMITED_DISCOUNT("반짝 할인");
-    private final String description;
+import java.util.HashMap;
+import java.util.Map;
 
-    // 생성자
-    PromotionPolicy(String description) {
-        this.description = description;
+public class PromotionPolicy {
+
+    private final String name;
+    private final int buy;
+    private final int get;
+    private final String startDate;
+    private final String emdDate;
+
+    private static final Map<String, PromotionPolicy> policies = new HashMap<>();
+
+    public PromotionPolicy(String name, int buy, int get, String startDate,String emdDate) {
+        this.name = name;
+        this.buy = buy;
+        this.get = get;
+        this.startDate = startDate;
+        this.emdDate = emdDate;
     }
 
-    // 설명 반환 메서드
-    public String getDescription() {
-        return description;
+    public static void addPolicy(String key, PromotionPolicy policy) {
+        policies.put(key, policy);
     }
 
-    @Override
-    public String toString() {
-        return description;
+    public static PromotionPolicy getPolicy(String key) {
+        return policies.get(key);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getBuy() {
+        return buy;
+    }
+
+    public int getGet() {
+        return get;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEmdDate() {
+        return emdDate;
     }
 }
