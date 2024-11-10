@@ -1,20 +1,18 @@
 package store.model;
 
 import store.policy.PromotionPolicy;
-
 import java.text.NumberFormat;
-
 public class Product {
     private String name;
     private int price;
     private int quantity;
-    private final PromotionPolicy promotion;
+    private PromotionPolicy promotion;
 
     public Product(String name, int price, int quantity, PromotionPolicy promotion) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
-        this.promotion = promotion;
+        this.promotion = (promotion != null) ? promotion : new PromotionPolicy("", 0, 0, "","");
     }
 
     public String getName() {
@@ -29,10 +27,8 @@ public class Product {
         return quantity;
     }
 
-    public void setQuantity(int orderedQuantity ) {
-        if (quantity > orderedQuantity)
-            quantity -= orderedQuantity;
-        // TODO: 재고 부족시 메시지 호출 어디서할지 정하기
+    public void deductStockByQuantity(int orderedQuantity) {
+        this.quantity= quantity-orderedQuantity;
     }
 
     public PromotionPolicy getPromotion() {
@@ -43,6 +39,9 @@ public class Product {
     public String toString() {
         NumberFormat numberFormat = NumberFormat.getInstance();
         String formattedPrice = numberFormat.format(price);
-        return "- " + name + " " + formattedPrice + "원 " + quantity + "개 " + promotion;
+        String quantityText = (quantity == 0) ? "재고 없음" : quantity + "개";
+        String promotionName = (promotion != null) ? promotion.getName() : "";
+        return "- " + name + " " + formattedPrice + "원 " + quantityText + " " + promotionName;
     }
+
 }
