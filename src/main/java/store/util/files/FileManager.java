@@ -32,17 +32,4 @@ public abstract class FileManager {
         reader.close();
         return products;
     }
-
-    public static void updateFileText(List<Product> products) {
-        List<String> strings = ProductParser.parseProductToString(products);
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(PATH, true), StandardCharsets.UTF_8))) {
-            for (String string : strings) {
-                writer.write(string);
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("[ERROR] 파일 쓰기 중 오류가 발생했습니다.", e);
-        }
-    }
 }
