@@ -1,53 +1,36 @@
 package store.controller;
 
-import store.factory.OrderItemFactory;
 import store.model.OrderedProduct;
 import store.model.ProductManager;
+import store.service.PromotionService;
 import store.util.files.FileManager;
 import store.model.Product;
+import store.util.parser.InputParser;
 import store.view.InputView;
 import store.view.OutputView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public abstract class StoreManager {
     public static void getOrder() {
-        List<OrderedProduct> orderedProducts = new ArrayList<>();
+        Map<Integer, Product> products = OutputView.printProductList(FileManager.getProductList());
+        Map<String, Integer> orderList = InputView.inputOrder();
+        Map<Integer, Product> productByOrder = ProductManager.getOrderedProduct(products, orderList);
+        List<OrderedProduct> orderQuantities = InputParser.getRequestProduct(orderList, productByOrder);
 
-        List<Product> products = OutputView.printProductList(FileManager.getProductList());
-        List<Map<String, Integer>> orderList = InputView.inputOrder();
-        List<Product> productByOrder = ProductManager.findProductByOrderInput(products, orderList);
-
-        List<Integer> orderQuantities = getOrderQuantities(orderList);
-        for (int i = 0; i < productByOrder.size(); i++) {
-            createOrder(orderedProducts, productByOrder.get(i), orderQuantities.get(i));
-        }
-
-        String membershipStatus = InputView.applyMembershipDiscount();
-        OutputView.printBillLetter();
-        payments(orderedProducts,membershipStatus);
-
-    }
-    private static void createOrder(List<OrderedProduct> orderedProducts, Product product, Integer quantity) {
-        orderedProducts.add(OrderItemFactory.createProductObject(product, quantity));
+        payments(productByOrder, orderQuantities);
     }
 
-    public static List<Integer> getOrderQuantities(List<Map<String, Integer>> orderList) {
-        return orderList.stream()
-                .flatMap(order -> order.values().stream())
-                .collect(Collectors.toList());
-    }
+    public static void payments(Map<Integer, Product> productByOrder, List<OrderedProduct> orderQuantities) {
+        Map<Product, String> ProductItem = new LinkedHashMap<>();
+        for (Product product : productByOrder.values()) {
+            ProductItem.put(product, product.getName());
+        }
 
-    public static void payments(List<OrderedProduct> productByOrderInput, String membershipStatus) {
-        if (membershipStatus.equalsIgnoreCase("Y")) {
-            for (OrderedProduct product : productByOrderInput) {
-                System.out.println(product.getName()+"\t\t"+product.getQuantity()+"\t\t"+product.getTotalPrice());
-            }
+        Map<String, OrderedProduct> orderedItem = new LinkedHashMap<>();
+        for (OrderedProduct orderedProduct : orderQuantities) {
+            orderedItem.put(orderedProduct.getName(), orderedProduct);
         }
-        if (membershipStatus.equalsIgnoreCase("N")) {
-        }
+        PromotionService.apply(ProductItem, orderedItem);
     }
 }
