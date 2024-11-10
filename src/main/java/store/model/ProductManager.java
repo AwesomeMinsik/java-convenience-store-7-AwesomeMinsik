@@ -1,29 +1,28 @@
 package store.model;
 
-import store.view.OutputView;
+import store.factory.OrderItemFactory;
+import store.view.InputView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class ProductManager {
-    public static List<Product> findProductByOrderInput(List<Product> products, List<Map<String, Integer>> orderedProductList) {
-        List<Product> matchedProducts = new ArrayList<>();
-        for (Map<String, Integer> orderedProduct : orderedProductList) {
-            matchedProducts.add(getProductByName(products, orderedProduct));
-        }
+    public static Map<Integer, Product> getOrderedProduct(Map<Integer, Product> products, Map<String, Integer> orderedProductList) {
+        int key = 0;
+        Map<Integer, Product> matchedProducts = new HashMap<>();
+        findByProductName(products, orderedProductList, matchedProducts, key);
         return matchedProducts;
     }
 
-    private static Product getProductByName(List<Product> products, Map<String, Integer> orderedProduct) {
-        for (Product product : products) {
-            if (orderedProduct.containsKey(product.getName())) {
-                setProductPriceByQuantity(orderedProduct, product);
-                compareProductQuantity(product, orderedProduct.get(product.getName()));
-                return product;
+    private static void findByProductName(Map<Integer, Product> products, Map<String, Integer> orderedProductList, Map<Integer, Product> matchedProducts, int key) {
+        for (Map.Entry<Integer, Product> entry : products.entrySet()) {
+            Product product = entry.getValue();
+            if (orderedProductList.containsKey(product.getName())) {
+                matchedProducts.put(key++, product);
             }
         }
-        return null;
     }
 
     private static void setProductPriceByQuantity(Map<String, Integer> orderedProduct, Product product) {
@@ -31,11 +30,8 @@ public abstract class ProductManager {
         product.setTotalPrice(totalValue);
     }
 
-    private static void compareProductQuantity(Product product, int quantity) {
-        if (product.getQuantity() < quantity) {
-            OutputView.printProductStatus(product);
-        }
-        product.deductStockByQuantity(quantity);
+    private static void createOrderProduct(List<OrderedProduct> orderedProducts, Product product, Integer quantity) {
+        orderedProducts.add(OrderItemFactory.createProductObject(product, quantity));
     }
 
 
