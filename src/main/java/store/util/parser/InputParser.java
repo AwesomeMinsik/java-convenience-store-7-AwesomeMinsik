@@ -1,26 +1,48 @@
 package store.util.parser;
 
+import store.factory.OrderItemFactory;
+import store.model.OrderedProduct;
+import store.model.Product;
 import store.util.validate.StringValidator;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class InputParser {
-    public static List<Map<String, Integer>> parseOrder(String order) {
-        return Arrays.stream(order.split(","))
-                .map(item -> parseProduct(item.trim()))
-                .collect(Collectors.toList());
+    public static Map<String, Integer> parseOrder(String order) {
+        return parseProduct(order);
     }
+    public static List<OrderedProduct> getRequestProduct(Map<String, Integer> orderList, Map<Integer, Product> productByOrder) {
+        List<OrderedProduct> orderedProducts = new ArrayList<>();
 
+        Map<String, Product> productNameMap = new HashMap<>();
+        for (Product product : productByOrder.values()) {
+            productNameMap.put(product.getName(), product);
+        }
+
+        for (Map.Entry<String, Integer> entry : orderList.entrySet()) {
+            String productName = entry.getKey();
+            Integer quantity = entry.getValue();
+
+            if (productNameMap.containsKey(productName)) {
+                Product product = productNameMap.get(productName);
+                orderedProducts.add(OrderItemFactory.createProductObject(product, quantity));
+            }
+        }
+
+        return orderedProducts;
+    }
     private static Map<String, Integer> parseProduct(String productStr) {
-        String cleaned = productStr.replace("[", "").replace("]", "");
-        String[] parts = cleaned.split("-");
-
-        Map<String, Integer> productMap = new HashMap<>();
-        productMap.put(parts[0].trim(),StringValidator.validateNumber(parts[1].trim()));
+        Map<String, Integer> productMap = new LinkedHashMap<>();
+        String[] split = productStr.split(",");
+        for (String string : split) {
+            String cleaned = string.replace("[", "").replace("]", "");
+            String[] parts = cleaned.split("-");
+            if (parts.length == 2) {
+                String productName = parts[0].trim();
+                int quantity = StringValidator.validateNumber(parts[1].trim());
+                productMap.put(productName, quantity);
+            }
+        }
         return productMap;
     }
 }
