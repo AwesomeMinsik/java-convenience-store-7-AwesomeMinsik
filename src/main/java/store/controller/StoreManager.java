@@ -14,7 +14,7 @@ import java.util.*;
 public abstract class StoreManager {
     public static OrderResult getOrder() {
         Map<Integer, Product> products = OutputView.printProductList(FileManager.getProductList());
-        Map<String, Integer> orderList = InputView.inputOrder();
+        Map<String, Integer> orderList = InputView.inputOrder(products);
         Map<Integer, Product> productByOrder = ProductManager.getOrderedProduct(products, orderList);
         List<OrderedProduct> orderQuantities = InputParser.getRequestProduct(orderList, productByOrder);
         return new OrderResult(productByOrder, orderQuantities);
