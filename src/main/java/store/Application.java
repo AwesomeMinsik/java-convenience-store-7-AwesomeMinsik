@@ -1,7 +1,10 @@
 package store;
 
+import store.controller.StoreManager;
+
 public class Application {
     public static void main(String[] args) {
-        // TODO: 프로그램 구현
+        StoreManager.OrderResult orderResult = StoreManager.getOrder();
+        StoreManager.payments(orderResult.productByOrder(), orderResult.orderQuantities());
     }
 }
