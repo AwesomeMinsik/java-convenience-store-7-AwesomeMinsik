@@ -1,9 +1,9 @@
 package store.service;
 
+import store.controller.BillLetter;
 import store.model.OrderedProduct;
 import store.model.Product;
 import store.view.InputView;
-import store.view.OutputView;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -20,13 +20,11 @@ public abstract class PromotionService {
         for (Map.Entry<Product, String> entry : productByOrder.entrySet()) {
             Product product = entry.getKey();
             OrderedProduct orderedProduct = orderedItem.get(product.getName());
-
             int orderedProductQuantity = orderedProduct.getQuantity();
             int dealQuantity = 0;
 
-            if (!product.getPromotion().getName().isEmpty()) {
+            if (!product.getPromotion().getName().isEmpty())
                 dealQuantity = getMaxPromotionQuantity(product);
-            }
 
             if (dealQuantity > 0) {
                 int realQuantity = Math.min(dealQuantity, orderedProductQuantity);
@@ -47,9 +45,7 @@ public abstract class PromotionService {
 
         int allTotal = promotinalTotalPrice + discountedTotalPrice;
 
-        OutputView.printBillLetter();
-        OutputView.printOrderList(orderedItem);
-        OutputView.printResult(allTotal);
+        BillLetter.getPaymentsResult(orderedItem,allTotal);
     }
 
     private static int getDiscountedTotal(int nonPromotionalTotal) {
