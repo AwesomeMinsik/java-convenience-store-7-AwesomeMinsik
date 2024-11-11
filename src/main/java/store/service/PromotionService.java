@@ -15,7 +15,7 @@ public abstract class PromotionService {
 
     public static void apply(Map<Product, String> productByOrder, Map<String, OrderedProduct> orderedItem) {
         int promotinalTotalPrice = 0;
-        int discountedTotalPrice = 0;
+        int nonPromotionalTotal = 0;
 
         for (Map.Entry<Product, String> entry : productByOrder.entrySet()) {
             Product product = entry.getKey();
@@ -38,20 +38,26 @@ public abstract class PromotionService {
             if (orderedProductQuantity > 0 && !promotedProducts.contains(product.getName())) {
                 if (product.getPromotion().getName().isEmpty()) {
                     product.deductStockByQuantity(orderedProductQuantity);
-                    discountedTotalPrice = getDiscountedTotal(orderedProduct.getTotalPrice());
+                    nonPromotionalTotal+=orderedProduct.getTotalPrice();
                 }
             }
         }
+        int discountedTotal = getDiscountedTotal(nonPromotionalTotal);
+        System.out.println("discountedTotal = " + discountedTotal);
+        int allTotal = promotinalTotalPrice + nonPromotionalTotal;
 
-        int allTotal = promotinalTotalPrice + discountedTotalPrice;
-
-        BillLetter.getPaymentsResult(orderedItem,allTotal);
+        BillLetter.getPaymentsResult(orderedItem, allTotal);
     }
 
     private static int getDiscountedTotal(int nonPromotionalTotal) {
         System.out.println("멤버십 할인을 받으시겠습니까? (Y/N)");
-        if (InputView.applyMembershipDiscount().equalsIgnoreCase("y"))
-            return (int) (nonPromotionalTotal * 0.7);
+        if (InputView.applyMembershipDiscount().equalsIgnoreCase("y")) {
+            int discountedTotal = (int) (nonPromotionalTotal * 0.7);
+            if (nonPromotionalTotal - discountedTotal > 8000) {
+                return nonPromotionalTotal - 8000;
+            }
+            return discountedTotal;
+        }
         return nonPromotionalTotal;
     }
 
