@@ -1,7 +1,9 @@
 package store.view;
 
+import store.model.OrderedProduct;
 import store.model.Product;
 
+import java.text.NumberFormat;
 import java.util.Map;
 
 public abstract class OutputView {
@@ -13,13 +15,26 @@ public abstract class OutputView {
         productList.values().forEach(System.out::println);
         return productList;
     }
-
-    public static void printBillLetter() {
-        System.out.println("==============W 편의점================");
-        System.out.println("상품명\t\t수량\t금액");
+    public static void printOrderList(Map<String, OrderedProduct> orderQuantities) {
+        for (OrderedProduct orderedProduct : orderQuantities.values()) {
+            System.out.println(orderedProduct);
+        }
     }
 
-    public static void printProductStatus(Product product) {
-        System.out.println("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+    public static void printBillLetter() {
+        System.out.println("===============W 편의점=================");
+        System.out.println("상품명\t\t\t\t수량\t\t\t금액");
+    }
+    public static String askRepurchaseConfirmation(){
+        System.out.println("감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)");
+        return InputView.applyMembershipDiscount();
+    }
+    public static void printResult(int total) {
+        NumberFormat numberFormat = NumberFormat.getInstance();
+
+        String formattedPrice = numberFormat.format(total);
+        System.out.println("======================================");
+        System.out.println("총구매액\t\t\t\t\t\t\t"+formattedPrice);
+        System.out.println("내실돈\t\t\t\t\t\t\t" + formattedPrice);
     }
 }
