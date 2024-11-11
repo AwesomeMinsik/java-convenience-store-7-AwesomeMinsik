@@ -29,18 +29,19 @@ public class InputParser {
         for (Product product : productByOrder.values()) {
             productNameMap.put(product.getName(), product);
         }
+        createOrderdProductByFactory(orderList, productNameMap, orderedProducts);
+        return orderedProducts;
+    }
 
+    private static void createOrderdProductByFactory(Map<String, Integer> orderList, Map<String, Product> productNameMap, List<OrderedProduct> orderedProducts) {
         for (Map.Entry<String, Integer> entry : orderList.entrySet()) {
             String productName = entry.getKey();
             Integer quantity = entry.getValue();
-
             if (productNameMap.containsKey(productName)) {
                 Product product = productNameMap.get(productName);
                 orderedProducts.add(OrderItemFactory.createProductObject(product, quantity));
             }
         }
-
-        return orderedProducts;
     }
 
 }
