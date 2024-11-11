@@ -2,7 +2,6 @@ package store.view;
 
 import camp.nextstep.edu.missionutils.Console;
 import store.model.Product;
-import store.model.ProductManager;
 import store.util.parser.InputParser;
 import store.util.validate.ProductValidater;
 import store.util.validate.StringValidator;
