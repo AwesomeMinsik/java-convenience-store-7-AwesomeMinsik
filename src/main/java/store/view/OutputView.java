@@ -21,7 +21,7 @@ public abstract class OutputView {
         }
     }
 
-    public static void printBillLetter() {
+    public static void printHeader() {
         System.out.println("===============W 편의점=================");
         System.out.println("상품명\t\t\t\t수량\t\t\t금액");
     }
