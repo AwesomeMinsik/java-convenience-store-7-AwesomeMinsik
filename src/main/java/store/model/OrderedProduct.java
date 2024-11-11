@@ -7,8 +7,6 @@ public class OrderedProduct {
     private int price;
     private int quantity;
     private int totalPrice;
-    private int freeItem;
-
     public OrderedProduct(String name, int price, int quantity) {
         this.name = name;
         this.price = price;
@@ -31,14 +29,14 @@ public class OrderedProduct {
         return totalPrice;
     }
 
-    public int getFreeItem() {
-        return freeItem;
+    public void setQuantity(int orderedQuantity){
+        this.quantity=orderedQuantity;
     }
 
     @Override
     public String toString() {
             NumberFormat numberFormat = NumberFormat.getInstance();
-            String formattedPrice = numberFormat.format(price);
-            return "-" + name + " " + formattedPrice + "원 " + quantity + "개 "+totalPrice;
+            String formattedPrice = numberFormat.format(totalPrice);
+            return  name +"\t\t\t\t"+ quantity + "\t\t\t"+ formattedPrice + "원 ";
     }
 }
