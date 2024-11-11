@@ -27,7 +27,6 @@ public abstract class StoreManager {
 
         Map<String, OrderedProduct> orderedItem = getOrderItemList(orderQuantities);
 
-        OutputView.printBillLetter();
         PromotionService.apply(ProductItem, orderedItem);
 
     }
