@@ -5,7 +5,11 @@ import store.factory.PromotionFactory;
 import store.model.Product;
 import store.policy.PromotionPolicy;
 
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static store.util.files.PromotionLoader.getPromotionList;
 
