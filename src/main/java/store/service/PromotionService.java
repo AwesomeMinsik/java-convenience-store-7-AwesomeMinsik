@@ -2,6 +2,7 @@ package store.service;
 
 import store.model.OrderedProduct;
 import store.model.Product;
+import store.view.InputView;
 import store.view.OutputView;
 
 import java.util.HashSet;
@@ -13,10 +14,9 @@ public abstract class PromotionService {
     private static Set<String> promotedProducts = new HashSet<>();
 
     public static void apply(Map<Product, String> productByOrder, Map<String, OrderedProduct> orderedItem) {
-        int total = 0;
-        int nonPromotionalTotal = 0;
-        int freeItem = 0;
-        int saled = 0;
+        int promotinalTotalPrice = 0;
+        int discountedTotalPrice = 0;
+
         for (Map.Entry<Product, String> entry : productByOrder.entrySet()) {
             Product product = entry.getKey();
             OrderedProduct orderedProduct = orderedItem.get(product.getName());
@@ -31,7 +31,7 @@ public abstract class PromotionService {
             if (dealQuantity > 0) {
                 int realQuantity = Math.min(dealQuantity, orderedProductQuantity);
                 if (!product.getPromotion().getName().isEmpty()) {
-                    total = getTotalWithDeductStock(orderedProduct, product, realQuantity, total);
+                    promotinalTotalPrice = getTotalWithDeductStock(orderedProduct, product, realQuantity, promotinalTotalPrice);
                 }
                 promotedProducts.add(product.getName());
                 orderedProductQuantity -= realQuantity;
@@ -40,19 +40,27 @@ public abstract class PromotionService {
             if (orderedProductQuantity > 0 && !promotedProducts.contains(product.getName())) {
                 if (product.getPromotion().getName().isEmpty()) {
                     product.deductStockByQuantity(orderedProductQuantity);
-                    nonPromotionalTotal += orderedProduct.getTotalPrice();
+                    discountedTotalPrice = getDiscountedTotal(orderedProduct.getTotalPrice());
                 }
             }
         }
 
-        int allTotal= total + nonPromotionalTotal;
+        int allTotal = promotinalTotalPrice + discountedTotalPrice;
 
+        OutputView.printBillLetter();
         OutputView.printOrderList(orderedItem);
         OutputView.printResult(allTotal);
     }
 
+    private static int getDiscountedTotal(int nonPromotionalTotal) {
+        System.out.println("멤버십 할인을 받으시겠습니까? (Y/N)");
+        if (InputView.applyMembershipDiscount().equalsIgnoreCase("y"))
+            return (int) (nonPromotionalTotal * 0.7);
+        return nonPromotionalTotal;
+    }
+
     private static int getTotalWithDeductStock(OrderedProduct orderedProduct, Product product, int realQuantity, int total) {
-        int freeItem;
+        int freeItem = 0;
         freeItem = orderedProduct.getQuantity() / product.getPromotion().getBuy();
         if (orderedProduct.getQuantity() % (product.getPromotion().getBuy() + 1) == 0) {
             product.deductStockByQuantity(realQuantity);
